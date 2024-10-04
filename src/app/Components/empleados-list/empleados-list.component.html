@@ -1,0 +1,29 @@
+<mat-form-field class="w-full" appearance="outline">
+    <mat-label>Empleado</mat-label>
+    <input #input type="text" placeholder="Seleccione un empleado" aria-label="Seleccione un empleado" matInput
+        [matAutocomplete]="auto" (input)="filter()" [formControl]="control">
+    @if (input.value !== '') {
+    <button matSuffix mat-icon-button aria-label="Clear" (click)="ClearFilter()">
+        <mat-icon>close</mat-icon>
+    </button>
+    }
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+        @if (isLoading) {
+        <mat-option [value]="" disabled="" data-loading="">
+            <div class="flex gap-2">
+                <mat-spinner class="spinner-sm"></mat-spinner>
+                <span>cargando...</span>
+            </div>
+        </mat-option>
+        }@else {
+        @for (option of filteredOptions; track option) {
+        <mat-option [value]="option.Value">{{option.Text}}</mat-option>
+        }
+        }
+    </mat-autocomplete>
+
+    <!-- Mostrar mensajes de error si el control no es válido -->
+    @if(!isValid){
+    <mat-error>*Seleccione un empleado!</mat-error>
+    }
+</mat-form-field>

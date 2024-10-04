@@ -1,0 +1,17 @@
+.filter-container {
+    margin-bottom: 10px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+table {
+    width: 70%;
+    font-size: 12px;
+}
+
+th,
+td {
+    padding: 4px;
+}

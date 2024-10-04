@@ -1,0 +1,98 @@
+<div class="flex justify-between items-center flex-wrap gap-4">
+    <mat-form-field appearance="outline">
+        <mat-label>Buscar...</mat-label>
+        <input matInput type="text" [(ngModel)]="FilterValue" (input)="applyFilter($event)"
+            placeholder="Ingrese un valor a filtrar">
+        @if (FilterValue) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="FilterValue='';applyFilter()">
+            <mat-icon>close</mat-icon>
+        </button>
+        }@else {
+        <mat-icon matSuffix>search</mat-icon>
+        }
+    </mat-form-field>
+
+    <!-- Nuevo -->
+    <button mat-stroked-button color="success" aria-label="Agregar nuevo corte" title="Agregar nuevo corte"
+        (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+        Nuevo
+    </button>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- Columna ID -->
+    <!-- <ng-container matColumnDef="Id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+    </ng-container> -->
+
+    <!-- Columna NombreApellidoEmpleado -->
+    <ng-container matColumnDef="NombreApellidoEmpleado">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Empleado </th>
+        <td mat-cell *matCellDef="let element"> {{element.NombreApellidoEmpleado}} </td>
+    </ng-container>
+
+    <!-- Columna DescServicio -->
+    <ng-container matColumnDef="DescServicio">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </th>
+        <td mat-cell *matCellDef="let element"> {{element.DescServicio}} </td>
+    </ng-container>
+
+    <!-- Columna DescripcionFormaPago -->
+    <ng-container matColumnDef="DescripcionFormaPago">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Forma de Pago </th>
+        <td mat-cell *matCellDef="let element"> {{element.DescripcionFormaPago}} </td>
+    </ng-container>
+
+    <!-- Columna Fecha -->
+    <ng-container matColumnDef="Fecha">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{element.Fecha | date}} </td>
+    </ng-container>
+
+    <!-- Columna Duracion -->
+    <ng-container matColumnDef="Duracion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Duración </th>
+        <td mat-cell *matCellDef="let element"> {{element.Duracion}} </td>
+    </ng-container>
+
+    <!-- Columna PrecioNeto -->
+    <ng-container matColumnDef="PrecioNeto">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Neto </th>
+        <td mat-cell *matCellDef="let element"> {{element.PrecioNeto}} </td>
+    </ng-container>
+
+    <!-- Comentario -->
+    <ng-container matColumnDef="Comentario">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comentario </th>
+        <td mat-cell *matCellDef="let element"> {{element.Comentario}} </td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="Acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+            <div class="flex gap-2">
+                <button mat-button (click)="editCorte(element)">Editar</button>
+                <button mat-button color="warn" (click)="deleteCorte(element.Id)">Eliminar</button>
+            </div>
+        </td>
+    </ng-container>
+
+    <!-- Cabecera -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+    <!-- Filas de datos -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<!-- Progress-bar -->
+@if(isLoading){
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+<!-- Paginador -->
+<mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
