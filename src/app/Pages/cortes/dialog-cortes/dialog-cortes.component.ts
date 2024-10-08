@@ -28,6 +28,7 @@ import { Select } from '../../../Models/select';
 import { CortesService } from '../../../Service/cortes.service';
 import { AddCorte, CortesAttributes } from '../../../Models/cortes';
 import { DatePipe } from '@angular/common';
+import formatTime from '../../../Utils/util';
 
 
 @Component({
@@ -163,14 +164,13 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
         IdFormaPago: this.SelectedMetodoPago?.Value,
         PrecioNeto: parseFloat(corteData.precio) || 0, // Se deja en cero porque la api le pone el precio cuando NO ES personalizado
         Fecha: corteData.fecha || new Date(), // Usando la fecha actual, o puedes utilizar this.data.corte.Fecha si lo deseas
-        Duracion: corteData.duracion ? corteData.duracion : '00:00', // Cortar los ':00' del final
+        Duracion: formatTime(corteData.duracion),
         Comentario: corteData.comentario || '',
         CreateAt: this.data ? this.data.CreateAt : new Date(), // Usar la fecha de creación si se está editando
         CreateBy: this.data ? this.data.CreateBy : 'Angular', // Valor predeterminado para el creador
         UpdateBy: this.data ? this.data.UpdateBy : 'Angular', // Valor predeterminado para el creador
       } as AddCorte;
 
-      console.log(newCorte);
       if (this.IsEdit) {
         // Si se está editando, realiza una actualización
         this.cortesService.updateCorte(this.data?.Id!, newCorte).subscribe({

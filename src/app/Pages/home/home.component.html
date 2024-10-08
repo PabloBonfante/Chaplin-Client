@@ -1,0 +1,29 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title style="color: aliceblue;">Inicio</mat-card-title>
+        <mat-card-subtitle>Usuario logeado</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content [className]="'p-4'">
+        <div class="grid sm:grid-cols-1 md:grid-cols-2  xl:grid-cols-4 gap-4">
+            <mat-form-field>
+                <mat-label>Nombre</mat-label>
+                <input type="text" matInput [value]="this.currentUser?.Nombre" disabled>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Apellido</mat-label>
+                <input type="text" matInput [value]="this.currentUser?.Apellido" disabled>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Alias</mat-label>
+                <input type="text" matInput [value]="this.currentUser?.Alias" disabled>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>DNI</mat-label>
+                <input type="text" matInput [value]="this.currentUser?.DNI" disabled>
+            </mat-form-field>
+        </div>
+    </mat-card-content>
+</mat-card>

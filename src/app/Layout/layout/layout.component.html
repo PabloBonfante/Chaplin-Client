@@ -4,7 +4,7 @@
     <button mat-button routerLink="/">Inicio</button>
     <button mat-button routerLink="/cortes">Cortes</button>
     <span class="example-spacer"></span>
-    <button mat-button routerLink="/contact">Cerrar Session</button>
+    <button mat-button (click)="logout()">Cerrar Session</button>
 </mat-toolbar>
 
 <div class="md:container md:mx-auto my-8 bg-chaplin rounded-lg shadow-lg">
