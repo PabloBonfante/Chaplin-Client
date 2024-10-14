@@ -90,9 +90,15 @@ export class CortesComponent implements OnInit {
     const instance = dialogRef.componentInstance;
     instance.data = corte;
     console.log(corte);
+
     // Escuchar eventos emitidos desde el modal
-    instance.OnChange.subscribe(() => {
+    instance.OnChange.subscribe((IsEdit) => {
       this.getAllCortes();
+      if (IsEdit) {
+        this.openSnackBar('Corte editado con éxito');
+      } else {
+        this.openSnackBar('Corte agregado con éxito');
+      }
     });
   }
 

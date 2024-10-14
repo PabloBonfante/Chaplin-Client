@@ -1,3 +1,5 @@
+import { Rol } from "./rol"
+
 export interface Usuario {
     Id: number
     Nombre: string
@@ -8,4 +10,13 @@ export interface Usuario {
     Password: string
     FechaCreacion: string
     IdRol: number
+}
+
+export interface Login {
+    Nombre: string
+    Apellido: string
+    Alias: string
+    DNI: number
+    Email: string
+    Rol: Rol
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Service/auth.service';
-import { Usuario } from '../../Models/usuario';
+import { Login } from '../../Models/usuario';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  currentUser!: Usuario | null;
+  currentUser!: Login | null;
   constructor(private loginService: AuthService) { }
 
   ngOnInit(): void {

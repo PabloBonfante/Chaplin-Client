@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../Service/auth.service';
-import { Usuario } from '../../Models/usuario';
+import { Login } from '../../Models/usuario';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../environment/environment';
@@ -63,7 +63,7 @@ export class LoginComponent {
   }
 
   // Función tipo guard para validar si data es de tipo Usuario
-  isUsuario(data: any): data is Usuario {
+  isUsuario(data: any): data is Login {
     return data;
   }
 

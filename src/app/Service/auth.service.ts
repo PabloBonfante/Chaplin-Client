@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Usuario } from '../Models/usuario';
+import { Login } from '../Models/usuario';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, map } from 'rxjs';
 import { environment } from '../../environment/environment';
@@ -14,7 +14,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private cryptoService: CryptoService) { }
 
-  public getUserFromLocalStorage(): Usuario | null {
+  public getUserFromLocalStorage(): Login | null {
     const encryptedData = localStorage.getItem(this.key);
     if (encryptedData) {
       const decryptedData = this.cryptoService.decrypt(encryptedData);
@@ -23,7 +23,7 @@ export class AuthService {
     return null;
   }
 
-  private setUserToLocalStorage(user: Usuario): void {
+  private setUserToLocalStorage(user: Login): void {
     const encryptedData = this.cryptoService.encrypt(JSON.stringify(user));
     localStorage.setItem(this.key, encryptedData);
   }
@@ -32,14 +32,14 @@ export class AuthService {
     localStorage.removeItem(this.key);
   }
 
-  login(user: string, password: string): Observable<Usuario | Error> {
+  login(user: string, password: string): Observable<Login | Error> {
     const url = this.apiUrl + 'usuario/login';
-    return this.http.get<Usuario | Error>(`${url}?alias=${user}&password=${password}`, { observe: 'response' }).pipe(
+    return this.http.get<Login | Error>(`${url}?alias=${user}&password=${password}`, { observe: 'response' }).pipe(
       tap(response => {
         // Verifica el status code
         if (response.status === 200) {
           // Si es exitoso, puedes guardar los datos
-          const usuario = response.body as Usuario;
+          const usuario = response.body as Login;
 
           // Guarda los datos aquí (ejemplo con localStorage o servicio de estado global)
           this.setUserToLocalStorage(usuario);
@@ -50,7 +50,7 @@ export class AuthService {
       }),
 
       // Transforma la respuesta para retornar solo el cuerpo (los datos del usuario o error)
-      map(response => response.body as Usuario | Error)
+      map(response => response.body as Login | Error)
     );
   }
 

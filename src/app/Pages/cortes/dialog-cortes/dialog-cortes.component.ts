@@ -29,6 +29,8 @@ import { CortesService } from '../../../Service/cortes.service';
 import { AddCorte, CortesAttributes } from '../../../Models/cortes';
 import { DatePipe } from '@angular/common';
 import formatTime from '../../../Utils/util';
+import { Login } from '../../../Models/usuario';
+import { AuthService } from '../../../Service/auth.service';
 
 
 @Component({
@@ -62,9 +64,10 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
   IsCustom: boolean = false;
   IsEdit: boolean = false;
   inputType: string = 'time';
+  currentUser!: Login | null;
 
   // Emitimos el evento cuando se crea o actualiza
-  @Output() OnChange = new EventEmitter();
+  @Output() OnChange = new EventEmitter<boolean>();
 
   @ViewChild(EmpleadosListComponent) empleadosListComponent!: EmpleadosListComponent;
   @ViewChild(ServiciosListComponent) serviciosListComponent!: ServiciosListComponent;
@@ -72,7 +75,7 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
   parentForm!: FormGroup;
   sPrecio = signal('');
 
-  constructor(public dialogRef: MatDialogRef<CortesComponent>, private fb: FormBuilder, private cortesService: CortesService, @Inject(MAT_DIALOG_DATA) public data?: CortesAttributes) { }
+  constructor(public dialogRef: MatDialogRef<CortesComponent>, private fb: FormBuilder, private cortesService: CortesService, private loginService: AuthService, @Inject(MAT_DIALOG_DATA) public data?: CortesAttributes) { }
 
   ngOnInit(): void {
     this.parentForm = this.fb.group({
@@ -91,6 +94,9 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
       this.inputType = 'datetime-local';
       this.IsEdit = true;
     }
+
+    // Obtengo el usuario logeado
+    this.currentUser = this.loginService.getUserFromLocalStorage();
 
     // Escucha cambios en IsCustom para activar/desactivar la validación del precio
     this.togglePrecioValidation();
@@ -167,8 +173,8 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
         Duracion: formatTime(corteData.duracion),
         Comentario: corteData.comentario || '',
         CreateAt: this.data ? this.data.CreateAt : new Date(), // Usar la fecha de creación si se está editando
-        CreateBy: this.data ? this.data.CreateBy : 'Angular', // Valor predeterminado para el creador
-        UpdateBy: this.data ? this.data.UpdateBy : 'Angular', // Valor predeterminado para el creador
+        CreateBy: this.currentUser?.Alias,
+        UpdateBy: this.currentUser?.Alias,
       } as AddCorte;
 
       if (this.IsEdit) {
@@ -177,7 +183,7 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
           next: (response) => {
             if (response.status === 200) {
               console.log('Corte actualizado exitosamente', response.body);
-              this.OnChange.emit();
+              this.OnChange.emit(this.IsEdit);
             } else {
               console.log('Error: Respuesta con código de estado inesperado', response.status);
             }
@@ -192,7 +198,7 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
           next: (response) => {
             if (response.status === 201) {
               console.log('Corte agregado exitosamente', response.body);
-              this.OnChange.emit();
+              this.OnChange.emit(this.IsEdit);
             } else {
               console.log('Error: Respuesta con código de estado inesperado', response.status);
             }
