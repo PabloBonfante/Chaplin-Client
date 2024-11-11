@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>
+    {{ Title }}
+</h2>
+<form [formGroup]="Form" (ngSubmit)="submitForm()">
+    <mat-dialog-content>
+        <div class="grid grid-cols-2 gap-4">
+
+            <!-- CodServicio -->
+            <mat-form-field appearance="outline">
+                <mat-label>CodServicio</mat-label>
+                <input matInput formControlName="CodServicio" />
+                @if (isValid('CodServicio')) {
+                <mat-error>*Ingrese un CodServicio!</mat-error>
+                }
+            </mat-form-field>
+
+            <!-- DescServicio -->
+            <mat-form-field appearance="outline">
+                <mat-label>DescServicio</mat-label>
+                <input matInput formControlName="DescServicio" />
+                @if (isValid('DescServicio')) {
+                <mat-error>*Ingrese un DescServicio!</mat-error>
+                }
+            </mat-form-field>
+
+            <!-- DescServicio -->
+            <mat-form-field appearance="outline">
+                <mat-label>DescServicio</mat-label>
+                <input matInput formControlName="DescServicio" />
+                @if (isValid('DescServicio')) {
+                <mat-error>*Ingrese un DescServicio!</mat-error>
+                }
+            </mat-form-field>
+
+            <!-- PrecioNeto -->
+            <mat-form-field appearance="outline">
+                <mat-label>PrecioNeto</mat-label>
+                <input matInput type="number" min="0" step="1" formControlName="PrecioNeto" />
+                @if (isValid('PrecioNeto')) {
+                <mat-error>
+                    *Ingrese un precio Neto!
+                </mat-error>
+                }
+            </mat-form-field>
+
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button type="submit">
+            <mat-icon>check</mat-icon>
+            Aceptar
+        </button>
+        <button mat-button mat-dialog-close color="error">
+            <mat-icon>close</mat-icon>
+            Cancel
+        </button>
+    </mat-dialog-actions>
+</form>

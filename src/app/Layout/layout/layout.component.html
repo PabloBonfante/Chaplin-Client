@@ -1,8 +1,20 @@
 <mat-toolbar>
-    <span>Chaplin</span>
+    <button mat-button routerLink="/" title="Ir al inicio">
+        <span class="text-xl">Chaplin</span>
+    </button>
     <span class="spacer"></span>
-    <button mat-button routerLink="/">Inicio</button>
     <button mat-button routerLink="/cortes">Cortes</button>
+    <button mat-button [matMenuTriggerFor]="Caja">Caja</button>
+    <mat-menu #Caja="matMenu">
+        <button mat-menu-item routerLink="/cierreCaja">Cierre de Caja</button>
+        <button mat-menu-item routerLink="/recaudacionCaja">Recaudacion Caja</button>
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="menu">Configuracion</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/servico">Servicios</button>
+    </mat-menu>
+
     <span class="example-spacer"></span>
     <button mat-button (click)="logout()">Cerrar Session</button>
 </mat-toolbar>

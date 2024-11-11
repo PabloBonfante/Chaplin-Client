@@ -5,3 +5,6 @@ export interface Servicio {
     PrecioNeto: number
 }
 
+export interface ServicioCreationAttributes extends Omit<Servicio, 'id'> {
+    id?: number;
+}

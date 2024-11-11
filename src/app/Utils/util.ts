@@ -13,3 +13,7 @@ export default function formatTime(duracion: string): string {
     // Si el formato es correcto, devolverlo directamente
     return duracion;
 }
+
+export function DateTimeToString(date: Date): string {
+    return date.toISOString().split('T')[0];
+}

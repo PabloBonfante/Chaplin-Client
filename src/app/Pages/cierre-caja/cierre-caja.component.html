@@ -1,0 +1,186 @@
+<h1 class="mt-0 text-slate-100">Cierre Caja</h1>
+<div class="flex justify-start items-center flex-wrap gap-4">
+    <mat-form-field appearance="outline" [formGroup]="frmPeriodo">
+        <mat-label>Periodo</mat-label>
+        <mat-date-range-input [rangePicker]="periodoPicker">
+            <input matStartDate placeholder="Fecha Inicio" formControlName="start">
+            <input matEndDate placeholder="Fecha Fin" formControlName="end">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="periodoPicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #periodoPicker>
+            <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancelar</button>
+                <button type="submit" mat-raised-button matDateRangePickerApply (click)="submitForm()">Aplicar</button>
+            </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+        @if (isValid('start') || isValid('end')) {
+        <mat-error>*Ingrese un periodo!</mat-error>
+        }
+    </mat-form-field>
+</div>
+@if (data !== undefined) {
+<div *ngFor="let dia of data.dias">
+    <mat-card class="mb-4">
+        <mat-card-title class="p-3 text-slate-100">Dia: {{ dia.dia | date: 'dd/MM/yyyy' }}</mat-card-title>
+        <mat-card-content>
+            <!-- Empleados del día -->
+            <div *ngFor="let empleado of dia.empleados"
+                class="mb-3 p-3 border-solid border-2 border-slate-600 mat-elevation-z8">
+                <mat-card class="!shadow-none">
+                    <mat-card-subtitle class="!text-2xl">{{ empleado.nombreApellido }}</mat-card-subtitle>
+                    <mat-card-content class="!p-0 overflow-x-auto">
+                        <!-- Tabla de servicios del empleado con fila de totales -->
+                        <table mat-table [dataSource]="empleado.lineasDia">
+                            <!-- Columnas de la tabla del empleado -->
+                            <ng-container matColumnDef="nroCorte">
+                                <th mat-header-cell *matHeaderCellDef> Nro Corte </th>
+                                <td mat-cell *matCellDef="let servicio"> #{{ servicio.nroCorte }} </td>
+                                <td mat-footer-cell *matFooterCellDef> Totales </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="descServicio">
+                                <th mat-header-cell *matHeaderCellDef> Servicio </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.descServicio }} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="precioNeto">
+                                <th mat-header-cell *matHeaderCellDef> Precio Neto </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.precioNeto | currency }} </td>
+                                <td mat-footer-cell *matFooterCellDef> {{ empleado.totalesEmpleado.PrecioNeto | currency
+                                    }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="descFormaPago">
+                                <th mat-header-cell *matHeaderCellDef> Forma de Pago </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.descFormaPago }} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="montoACobrar">
+                                <th mat-header-cell *matHeaderCellDef> Monto a Cobrar </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.montoACobrar | currency }} </td>
+                                <td mat-footer-cell *matFooterCellDef> {{ empleado.totalesEmpleado.MontoCobrar |
+                                    currency }} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="fecha">
+                                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.fecha | date: 'short' }} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="comentario">
+                                <th mat-header-cell *matHeaderCellDef> comentario </th>
+                                <td mat-cell *matCellDef="let servicio"> {{ servicio.comentario }} </td>
+                                <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <!-- Filas de la tabla del empleado -->
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+                        </table>
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div class="p-3 border-solid border-2 border-slate-600">
+                <mat-card class="!shadow-none">
+                    <mat-card-subtitle class="!text-2xl">Total del dia: ({{ dia.dia | date: 'dd/MM/yyyy'
+                        }})</mat-card-subtitle>
+                    <mat-card-content class="!p-0 overflow-x-auto">
+                        <div class="relative overflow-x-auto">
+                            <!-- Tabla de totales -->
+                            <table mat-table
+                                [dataSource]="combinarTotales(dia.totalDia, 'Total del Dia', dia.totalDiaJefe, 'Total del Dia Jefe')">
+                                <!-- Columnas de la tabla -->
+                                <ng-container matColumnDef="Tipo">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.Tipo }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="CantCortes">
+                                    <th mat-header-cell *matHeaderCellDef> Cantidad de Cortes </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.CantCortes }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="PrecioNeto">
+                                    <th mat-header-cell *matHeaderCellDef> Precio Neto </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.PrecioNeto | currency }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="MontoCobrar">
+                                    <th mat-header-cell *matHeaderCellDef> Monto a Cobrar </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.MontoCobrar | currency}} </td>
+                                </ng-container>
+
+                                <!-- Filas de la tabla -->
+                                <tr mat-header-row *matHeaderRowDef="['Tipo', 'CantCortes','PrecioNeto','MontoCobrar']">
+                                </tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: ['Tipo', 'CantCortes','PrecioNeto','MontoCobrar'];">
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            @if (data.desde !== data.hasta) {
+            <div class="mt-3 p-3 border-solid border-2 border-slate-600">
+                <mat-card>
+                    <mat-card-subtitle class="!text-2xl">Total periodo Desde: ({{ data.desde | date: 'dd/MM/yyyy' }})
+                        Hasta: ({{
+                        data.hasta | date: 'dd/MM/yyyy' }})</mat-card-subtitle>
+                    <mat-card-content class="!p-0 overflow-x-auto">
+                        <!-- Tabla de Totales del Día (HTML simple con estilos de mat-table) -->
+                        <div class="relative overflow-x-auto">
+                            <!-- Tabla de totales -->
+                            <table mat-table
+                                [dataSource]="combinarTotales(data.totalPeriodo, 'Total del Dia', data.totalPeriodoJefe, 'Total del Dia Jefe')">
+                                <!-- Columnas de la tabla -->
+                                <ng-container matColumnDef="Tipo">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.Tipo }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="CantCortes">
+                                    <th mat-header-cell *matHeaderCellDef> Cantidad de Cortes </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.CantCortes }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="PrecioNeto">
+                                    <th mat-header-cell *matHeaderCellDef> Precio Neto </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.PrecioNeto | currency }} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="MontoCobrar">
+                                    <th mat-header-cell *matHeaderCellDef> Monto a Cobrar </th>
+                                    <td mat-cell *matCellDef="let servicio"> {{ servicio.MontoCobrar | currency}} </td>
+                                </ng-container>
+
+                                <!-- Filas de la tabla -->
+                                <tr mat-header-row *matHeaderRowDef="['Tipo', 'CantCortes','PrecioNeto','MontoCobrar']">
+                                </tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: ['Tipo', 'CantCortes','PrecioNeto','MontoCobrar'];">
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>
+}@else {
+<p>Sin informacion</p>
+}
+
+<!-- Progress-bar -->
+@if(isLoading){
+<p>Cargando</p>
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}

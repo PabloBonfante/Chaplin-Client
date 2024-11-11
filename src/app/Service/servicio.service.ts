@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { firstValueFrom, map, Observable } from 'rxjs';
-import { environment } from '../../environment/environment';
-import { Servicio } from '../Models/servicio';
-import { Select } from '../Models/select';
+import { environment } from '@environment/environment';
+
+// Models
+import { Servicio, ServicioCreationAttributes } from '@models/servicio';
+import { Select } from '@models/select';
+
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +49,23 @@ export class ServicioService {
     );
   }
 
+  addServicio(servicio: ServicioCreationAttributes): Observable<HttpResponse<ServicioCreationAttributes>> {
+    const url = `${this.apiUrl}servicio`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<ServicioCreationAttributes>(url, servicio, { headers, observe: 'response' });
+  }
+
+  deleteServicio(id: number): Observable<HttpResponse<void>> {
+    const url = `${this.apiUrl}servicio/${id}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.delete<void>(url, { headers, observe: 'response' });
+  }
+
+  updateServicio(Id: number, servicio: ServicioCreationAttributes): Observable<HttpResponse<Servicio>> {
+    const url = `${this.apiUrl}servicio/${Id}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    console.log(servicio);
+    return this.http.put<Servicio>(url, servicio, { headers, observe: 'response' });
+  }
 }

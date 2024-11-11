@@ -236,10 +236,6 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
     this.SelectedEmpleado = empleado;
   }
 
-  GetAutoCompleteByName(name: string): FormControl {
-    return this.parentForm.get(name) as FormControl;
-  }
-
   togglePrecioValidation(): void {
     const precio = this.GetAutoCompleteByName('precio');
     if (this.IsCustom) {
@@ -252,6 +248,10 @@ export class DialogCortesComponent implements OnInit, AfterViewInit {
 
     // Actualiza el estado del control para reflejar los cambios
     precio.updateValueAndValidity();
+  }
+
+  GetAutoCompleteByName(name: string): FormControl {
+    return this.parentForm.get(name) as FormControl;
   }
 
   isValid(controlName: string) {

@@ -1,0 +1,76 @@
+<h2 class="text-white">Recaudacion Caja</h2>
+<div class="flex justify-between items-center flex-wrap gap-4">
+    <mat-form-field appearance="outline">
+        <mat-label>Buscar...</mat-label>
+        <input matInput type="text" [(ngModel)]="FilterValue" (input)="applyFilter($event)"
+            placeholder="Ingrese un valor a filtrar">
+        @if (FilterValue) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="FilterValue='';applyFilter()">
+            <mat-icon>close</mat-icon>
+        </button>
+        }@else {
+        <mat-icon matSuffix>search</mat-icon>
+        }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" [formGroup]="frmPeriodo">
+        <mat-label>Periodo</mat-label>
+        <mat-date-range-input [rangePicker]="periodoPicker">
+            <input matStartDate placeholder="Fecha Inicio" formControlName="start">
+            <input matEndDate placeholder="Fecha Fin" formControlName="end">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="periodoPicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #periodoPicker>
+            <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancelar</button>
+                <button type="submit" mat-raised-button matDateRangePickerApply (click)="submitForm()">Aplicar</button>
+            </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+        @if (isValid('start') || isValid('end')) {
+        <mat-error>*Ingrese un periodo!</mat-error>
+        }
+    </mat-form-field>
+</div>
+
+<table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- Fecha -->
+    <ng-container matColumnDef="Fecha">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{element.Fecha}} </td>
+    </ng-container>
+
+    <!-- CodigoFormaPago -->
+    <ng-container matColumnDef="CodigoFormaPago">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo Forma Pago </th>
+        <td mat-cell *matCellDef="let element"> {{element.CodigoFormaPago}} </td>
+    </ng-container>
+
+    <!-- DescripcionFormaPago -->
+    <ng-container matColumnDef="DescripcionFormaPago">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripcion Forma Pago </th>
+        <td mat-cell *matCellDef="let element"> {{element.DescripcionFormaPago}} </td>
+    </ng-container>
+
+    <!-- Total -->
+    <ng-container matColumnDef="Total">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+        <td mat-cell *matCellDef="let element"> {{element.Total}} </td>
+    </ng-container>
+
+    <!-- Cabecera -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+    <!-- Filas de datos -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<!-- Progress-bar -->
+@if(isLoading){
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+<!-- Paginador -->
+<mat-paginator [length]="dataSource.data.length" [pageSize]="10" [pageSizeOptions]="[10, 25, 50, 100]"></mat-paginator>
